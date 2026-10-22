@@ -1,6 +1,7 @@
 package com.example.employeerestapi.controller;
 
 import com.example.employeerestapi.DTO.EmployeeRequestDto;
+import com.example.employeerestapi.DTO.EmployeeResponseDto;
 import com.example.employeerestapi.entities.Employee;
 import com.example.employeerestapi.service.EmployeeService;
 import jakarta.validation.Valid;
@@ -23,47 +24,47 @@ public class EmployeeController {
 
     // Create Employee
     @PostMapping
-    public ResponseEntity<Employee> addEmployee(
+    public ResponseEntity<EmployeeResponseDto> addEmployee(
             @Valid @RequestBody EmployeeRequestDto dto) {
 
-        Employee employee = convertToEntity(dto);
-        Employee savedEmployee = employeeService.addEmployee(employee);
+        EmployeeResponseDto response =
+                employeeService.addEmployee(dto);
 
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(savedEmployee);
+                .body(response);
     }
 
     // View All Employees
     @GetMapping
-    public ResponseEntity<List<Employee>> showEmployee() {
+    public ResponseEntity<List<EmployeeResponseDto>> showEmployee() {
 
-        List<Employee> employees = employeeService.showEmployee();
+        List<EmployeeResponseDto> employees =
+                employeeService.showEmployee();
 
         return ResponseEntity.ok(employees);
     }
 
     // View Employee By ID
     @GetMapping("/{id}")
-    public ResponseEntity<Employee> showEmployeeById(
+    public ResponseEntity<EmployeeResponseDto> showEmployeeById(
             @PathVariable int id) {
 
-        Employee employee = employeeService.showEmployeeById(id);
+        EmployeeResponseDto response =
+                employeeService.showEmployeeById(id);
 
-        return ResponseEntity.ok(employee);
+        return ResponseEntity.ok(response);
     }
 
     // Update Employee
     @PutMapping("/{id}")
-    public ResponseEntity<Employee> updateEmployee(
+    public ResponseEntity<EmployeeResponseDto> updateEmployee(
             @PathVariable int id,
             @Valid @RequestBody EmployeeRequestDto dto) {
 
-        Employee employeeData = convertToEntity(dto);
+        EmployeeResponseDto response =
+                employeeService.updateEmployee(id, dto);
 
-        Employee updatedEmployee =
-                employeeService.updateEmployee(id, employeeData);
-
-        return ResponseEntity.ok(updatedEmployee);
+        return ResponseEntity.ok(response);
     }
 
     // Delete Employee
@@ -75,21 +76,4 @@ public class EmployeeController {
 
         return ResponseEntity.noContent().build();
     }
-
-    private Employee convertToEntity(EmployeeRequestDto dto) {
-
-        Employee employee = new Employee();
-
-        employee.setFirstName(dto.getFirstName());
-        employee.setLastName(dto.getLastName());
-        employee.setEmail(dto.getEmail());
-        employee.setPhoneNumber(dto.getPhoneNumber());
-        employee.setDepartment(dto.getDepartment());
-        employee.setDesignation(dto.getDesignation());
-        employee.setSalary(dto.getSalary());
-        employee.setStatus(dto.getStatus());
-
-        return employee;
-    }
-
 }

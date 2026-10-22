@@ -1,5 +1,6 @@
 package com.example.employeerestapi.DTO;
 
+import com.example.employeerestapi.entities.Employee;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -31,6 +32,21 @@ public class EmployeeRequestDto {
 
         @NotNull(message = "Status is required")
         private Boolean status;
+
+    public Employee convertToEntity() {
+        Employee employee = new Employee();
+
+        employee.setFirstName(firstName);
+        employee.setLastName(lastName);
+        employee.setEmail(email);
+        employee.setPhoneNumber(phoneNumber);
+        employee.setDepartment(department);
+        employee.setDesignation(designation);
+        employee.setSalary(salary);
+        employee.setStatus(status);
+
+        return employee;
+    }
 
     public String getFirstName() {
         return firstName;
