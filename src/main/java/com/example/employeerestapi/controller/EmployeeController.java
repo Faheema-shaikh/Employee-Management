@@ -4,6 +4,8 @@ import com.example.employeerestapi.DTO.EmployeeRequestDto;
 import com.example.employeerestapi.DTO.EmployeeResponseDto;
 import com.example.employeerestapi.entities.Employee;
 import com.example.employeerestapi.service.EmployeeService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,63 +16,59 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/employee")
+@Tag(
+        name = "Employee Management",
+        description = "APIs for managing employee records"
+)
 public class EmployeeController {
 
-    EmployeeService employeeService;
+    private final EmployeeService employeeService;
 
     public EmployeeController(EmployeeService employeeService) {
         this.employeeService = employeeService;
     }
 
-    // Create Employee
     @PostMapping
+    @Operation(summary = "Create an employee")
     public ResponseEntity<EmployeeResponseDto> addEmployee(
-            @Valid @RequestBody EmployeeRequestDto dto) {
+            @Valid @RequestBody EmployeeRequestDto requestDto) {
 
         EmployeeResponseDto response =
-                employeeService.addEmployee(dto);
+                employeeService.addEmployee(requestDto);
 
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(response);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-    // View All Employees
     @GetMapping
+    @Operation(summary = "Get all employees")
     public ResponseEntity<List<EmployeeResponseDto>> showEmployee() {
 
-        List<EmployeeResponseDto> employees =
-                employeeService.showEmployee();
-
-        return ResponseEntity.ok(employees);
+        return ResponseEntity.ok(employeeService.showEmployee());
     }
 
-    // View Employee By ID
     @GetMapping("/{id}")
+    @Operation(summary = "Get an employee by ID")
     public ResponseEntity<EmployeeResponseDto> showEmployeeById(
             @PathVariable int id) {
 
-        EmployeeResponseDto response =
-                employeeService.showEmployeeById(id);
-
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(employeeService.showEmployeeById(id));
     }
 
-    // Update Employee
     @PutMapping("/{id}")
+    @Operation(summary = "Update an employee")
     public ResponseEntity<EmployeeResponseDto> updateEmployee(
             @PathVariable int id,
-            @Valid @RequestBody EmployeeRequestDto dto) {
+            @Valid @RequestBody EmployeeRequestDto requestDto) {
 
         EmployeeResponseDto response =
-                employeeService.updateEmployee(id, dto);
+                employeeService.updateEmployee(id, requestDto);
 
         return ResponseEntity.ok(response);
     }
 
-    // Delete Employee
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteEmployee(
-            @PathVariable int id) {
+    @Operation(summary = "Delete an employee")
+    public ResponseEntity<Void> deleteEmployee(@PathVariable int id) {
 
         employeeService.deleteEmployee(id);
 

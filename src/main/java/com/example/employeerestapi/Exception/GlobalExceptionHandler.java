@@ -66,7 +66,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
-    public ResponseEntity<ApiError> handleInvalidJson(
+    public ResponseEntity<ApiError> handleInvalidRequest(
             HttpMessageNotReadableException ex,
             HttpServletRequest request) {
 
@@ -79,7 +79,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(DataIntegrityViolationException.class)
-    public ResponseEntity<ApiError> handleDatabaseConstraint(
+    public ResponseEntity<ApiError> handleDataIntegrityViolation(
             DataIntegrityViolationException ex,
             HttpServletRequest request) {
 
@@ -95,9 +95,6 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ApiError> handleUnexpected(
             Exception ex,
             HttpServletRequest request) {
-
-        // Add proper server-side logging here.
-        // Never return stack traces or internal database details to clients.
 
         return buildError(
                 HttpStatus.INTERNAL_SERVER_ERROR,
